@@ -1,7 +1,8 @@
 steps:
   - name: gcr.io/cloud-builders/gcloud
+    entrypoint: /bin/sh
     args:
       - '-c'
-      - >
-        vmlist=$(gcloud compute instances list --format='value(name)' --filter="labels.${_VM_LABEL_KEY}:${_VM_LABEL_VALUE} AND status:RUNNING") && for vm in $vmlist; do gcloud compute ssh cloudbuild@$vm --zone $(gcloud compute instances list --format='value(zone)' --filter="name='$vm'") --quiet -- 'gsutil cp gs://agencies_lab_buck/startup1.sh . && sudo chmod +x startup1.sh && sudo sh startup1.sh && sudo rm startup1.sh'; done
-    entrypoint: bash
+      - |
+        set -x && \
+        gcloud compute ssh agencies --zone=$(gcloud config get-value compute/zone) --command='/bin/sh /home/ihor_boklach_ir_2021/pull.sh'
