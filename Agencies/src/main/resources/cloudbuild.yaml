@@ -5,4 +5,4 @@ steps:
       - '-c'
       - |
         set -x && \
-        gcloud compute ssh agencies --zone=$(gcloud config get-value compute/zone) --command='/bin/sh /home/ihor_boklach_ir_2021/pull.sh'
+        gcloud compute ssh agencies --zone=us-central1-a --command='/bin/sh /home/ihor_boklach_ir_2021/pull.sh'
