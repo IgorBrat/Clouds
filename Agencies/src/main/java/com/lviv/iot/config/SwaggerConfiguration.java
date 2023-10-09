@@ -14,7 +14,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfiguration {
     private static final String SWAGGER_API_VERSION = "1.0";
     private static final String LICENSE_TEXT = "License";
-    private static final String title = "Spring Boot V3.1 by Ihor Boklach";
+    private static final String title = "Spring Boot V3.2 by Ihor Boklach";
     private static final String description = "Documentation for the project";
 
     private ApiInfo apiInfo() {
