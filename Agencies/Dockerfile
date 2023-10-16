@@ -16,6 +16,8 @@ RUN mvn clean install -Dmaven.test.skip=true
 #Stage 2
 # set base image for second stage
 FROM eclipse-temurin:17.0.8.1_1-jre
+
+EXPOSE 8080
 # set deployment directory
 WORKDIR ./
 # copy over the built artifact from the maven image
