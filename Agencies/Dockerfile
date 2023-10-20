@@ -23,5 +23,6 @@ WORKDIR ./
 # copy over the built artifact from the maven image
 COPY --from=stage1 target/app.jar ./app.jar
 
+CMD java -jar ./app.jar
 # RUN
 # docker run --name demo_container -p 8080:8080 demo_image:2 java -jar /opt/demo/demo.jar
