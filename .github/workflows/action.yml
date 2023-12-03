@@ -1,0 +1,30 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [ "lab4" ]
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Decrypt variables
+        run: gpg --quiet --batch --yes --decrypt --passphrase="$PASSPHRASE" --output variables.tf variables.tf.gpg
+        env:
+          PASSPHRASE: ${{ secrets.DECRYPT_PASSPHRASE }}
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+      - name: Init Terraform
+        run: terraform init
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+      - name: Plan Terraform
+        run: terraform plan
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+      - name: Apply Terraform
+        run: terraform apply -auto-approve
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
