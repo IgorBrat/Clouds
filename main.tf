@@ -8,9 +8,9 @@ terraform {
 
 # Provider
 provider "google" {
-  project     = var.project_id
-  region      = var.region
-  zone        = var.zone
+  project = var.project_id
+  region  = var.region
+  zone    = var.zone
 }
 
 # Services
@@ -41,8 +41,8 @@ resource "google_project_service" "artifact_registry" {
 }
 
 resource "google_project_service" "cloud_run" {
-  project = var.project_id
-  service = "run.googleapis.com"
+  project                    = var.project_id
+  service                    = "run.googleapis.com"
   disable_dependent_services = true
 }
 
@@ -303,9 +303,9 @@ resource "google_cloudbuild_trigger" "locust-trigger" {
 
 # App Cloud Run service
 resource "google_cloud_run_v2_service" "agencies_tf" {
-  location = var.region
-  name     = var.app_service
-  ingress = "INGRESS_TRAFFIC_ALL"
+  location     = var.region
+  name         = var.app_service
+  ingress      = "INGRESS_TRAFFIC_ALL"
   launch_stage = "BETA"
 
   template {
@@ -324,31 +324,31 @@ resource "google_cloud_run_v2_service" "agencies_tf" {
       image = "us-docker.pkg.dev/cloudrun/container/hello"
 
       env {
-        name = "DB_NAME"
+        name  = "DB_NAME"
         value = var.scheme_name
       }
       env {
-        name = "USER_NAME"
+        name  = "USER_NAME"
         value = var.db_user
       }
       env {
-        name = "USER_PASSWORD"
+        name  = "USER_PASSWORD"
         value = var.db_user_password
       }
       env {
-        name = "DB_IP"
+        name  = "DB_IP"
         value = google_sql_database_instance.db_instance.private_ip_address
       }
       env {
-        name = "DB_CONNECTION_NAME"
+        name  = "DB_CONNECTION_NAME"
         value = "${var.project_id}:${var.region}:${var.db_instance}"
       }
       env {
-        name = "SERVER_ADMIN"
+        name  = "SERVER_ADMIN"
         value = var.server_admin
       }
       env {
-        name = "SERVER_ADMIN_PASSWORD"
+        name  = "SERVER_ADMIN_PASSWORD"
         value = var.server_admin_password
       }
     }
@@ -365,7 +365,34 @@ resource "google_cloud_run_v2_service" "agencies_tf" {
 }
 
 resource "google_cloud_run_v2_service_iam_member" "app_invoker" {
-  name = google_cloud_run_v2_service.agencies_tf.name
-  role = "roles/run.invoker"
+  name   = google_cloud_run_v2_service.agencies_tf.name
+  role   = "roles/run.invoker"
   member = "allUsers"
 }
+
+# Load Cloud Run service
+resource "google_cloud_run_v2_service" "load_tf" {
+  location = var.region
+  name     = var.load_service
+  ingress  = "INGRESS_TRAFFIC_ALL"
+
+  template {
+    scaling {
+      min_instance_count = 0
+      max_instance_count = 1
+    }
+    # First time there is no image of app because trigger never triggered
+    containers {
+      image = "us-docker.pkg.dev/cloudrun/container/hello"
+      ports {
+        container_port = 8089
+      }
+    }
+  }
+}
+
+#resource "google_cloud_run_v2_service_iam_member" "load_invoker" {
+#  name   = google_cloud_run_v2_service.load_tf.name
+#  role   = "roles/run.invoker"
+#  member = "allUsers"
+#}
