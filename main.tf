@@ -128,7 +128,7 @@ resource "google_sql_database_instance" "db_instance" {
 resource "google_sql_database" "db_scheme" {
   name     = var.scheme_name
   instance = google_sql_database_instance.db_instance.id
-  depends_on = [data.google_storage_bucket_object.db_creation_file]
+#  depends_on = [data.google_storage_bucket_object.db_creation_file]
 }
 
 # DB user
