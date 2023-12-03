@@ -15,7 +15,7 @@ jobs:
         env:
           PASSPHRASE: ${{ secrets.DECRYPT_PASSPHRASE }}
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
+        uses: hashicorp/setup-terraform@v3
       - name: Init Terraform
         run: terraform init
         env:
