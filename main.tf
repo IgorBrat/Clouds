@@ -55,13 +55,6 @@ resource "google_service_account" "cloud_build_service_account" {
 }
 
 
-#resource "google_artifact_registry_repository" "image_repository" {
-#  repository_id = "cloud-run-source-deploy"
-#  location      = var.region
-#  format        = "DOCKER"
-#  depends_on    = [google_project_service.artifact_registry]
-#}
-
 resource "google_project_iam_member" "cloud_build_editor" {
   project = var.project_id
   role    = "roles/editor"
@@ -147,6 +140,13 @@ resource "google_sql_user" "terraform_user" {
 
 # CI/CD
 
+resource "google_artifact_registry_repository" "app_repo" {
+  depends_on = [ google_project_service.artifact_registry ]
+  repository_id = "cloud-run-source-deploy/${var.app_service}"
+  format        = "DOCKER"
+  location      = var.region
+}
+
 # App trigger
 resource "google_cloudbuild_trigger" "app-trigger" {
   name            = "agencies-terraform-trigger"
@@ -212,7 +212,7 @@ resource "google_cloudbuild_trigger" "app-trigger" {
     substitutions = {
       _AR_HOSTNAME = "${var.region}-docker.pkg.dev"
       _PLATFORM : "managed"
-      _SERVICE_NAME : var.app_service_image_name
+      _SERVICE_NAME : var.app_service
       _DEPLOY_REGION : var.region
       REPO_NAME: "clouds"
     }
