@@ -207,7 +207,7 @@ resource "google_cloudbuild_trigger" "app-trigger" {
       _PLATFORM : "managed"
       _SERVICE_NAME : var.app_service
       _DEPLOY_REGION : var.region
-      REPO_NAME: "clouds"
+      REPO_NAME: var.app_service_repo
     }
 
     tags = [
@@ -285,6 +285,7 @@ resource "google_cloudbuild_trigger" "locust-trigger" {
       _PLATFORM : "managed"
       _SERVICE_NAME : var.load_service
       _DEPLOY_REGION : var.region
+      REPO_NAME: var.load_service_repo
     }
 
     tags = [
