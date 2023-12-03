@@ -389,6 +389,11 @@ resource "google_cloud_run_v2_service" "load_tf" {
       }
     }
   }
+  lifecycle {
+    ignore_changes = [
+      template[0].containers[0].image,
+    ]
+  }
 }
 
 resource "google_cloud_run_v2_service_iam_member" "load_invoker" {
