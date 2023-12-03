@@ -212,9 +212,9 @@ resource "google_cloudbuild_trigger" "app-trigger" {
     substitutions = {
       _AR_HOSTNAME = "${var.region}-docker.pkg.dev"
       _PLATFORM : "managed"
-      _SERVICE_NAME : var.app_service
+      _SERVICE_NAME : "clouds"
       _DEPLOY_REGION : var.region
-      _REPO_NAME: "clouds"
+      REPO_NAME: "clouds"
     }
 
     tags = [
