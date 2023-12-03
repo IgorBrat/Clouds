@@ -99,11 +99,6 @@ resource "google_service_networking_connection" "db_private_connection" {
 
 # DB
 
-data "google_storage_bucket_object" "db_creation_file" {
-  name   = var.db_creation_file
-  bucket = var.db_bucket
-}
-
 # Instance
 resource "google_sql_database_instance" "db_instance" {
   database_version = "MYSQL_8_0"
