@@ -214,6 +214,7 @@ resource "google_cloudbuild_trigger" "app-trigger" {
       _PLATFORM : "managed"
       _SERVICE_NAME : var.app_service
       _DEPLOY_REGION : var.region
+      _REPO_NAME: "clouds"
     }
 
     tags = [
