@@ -1,3 +1,5 @@
+# region Init
+
 # Save state on GCP
 terraform {
   backend "gcs" {
@@ -13,7 +15,9 @@ provider "google" {
   zone    = var.zone
 }
 
-# Services
+# endregion
+
+# region Services
 
 # Compute Engine service
 resource "google_project_service" "compute_engine" {
@@ -46,7 +50,9 @@ resource "google_project_service" "cloud_run" {
   disable_dependent_services = true
 }
 
-# Service Accounts
+# endregion
+
+# region Service Accounts
 
 resource "google_service_account" "cloud_build_service_account" {
   display_name = "Cloud Build SA"
@@ -67,7 +73,9 @@ resource "google_artifact_registry_repository_iam_member" "artifact_registry_wri
   member     = google_service_account.cloud_build_service_account.member
 }
 
-# VPC
+# endregion
+
+# region VPC
 
 # Network
 resource "google_compute_network" "terraform_vpc" {
@@ -97,7 +105,9 @@ resource "google_service_networking_connection" "db_private_connection" {
   reserved_peering_ranges = [google_compute_global_address.db_private_ip.name]
 }
 
-# DB
+# endregion
+
+# region DB
 
 # Instance
 resource "google_sql_database_instance" "db_instance" {
@@ -138,7 +148,9 @@ resource "google_sql_user" "terraform_user" {
   host     = "%"
 }
 
-# CI/CD
+# endregion
+
+# region CI/CD
 
 # App trigger
 resource "google_cloudbuild_trigger" "app-trigger" {
@@ -363,8 +375,8 @@ resource "google_cloud_run_v2_service" "agencies_tf" {
     ]
   }
 }
-# check
 
+# Access to app service
 resource "google_cloud_run_v2_service_iam_member" "app_invoker" {
   name   = google_cloud_run_v2_service.agencies_tf.name
   role   = "roles/run.invoker"
@@ -385,6 +397,14 @@ resource "google_cloud_run_v2_service" "load_tf" {
     # First time there is no image of app because trigger never triggered
     containers {
       image = "us-docker.pkg.dev/cloudrun/container/hello"
+      env {
+        name  = "NAME"
+        value = var.server_admin
+      }
+      env {
+        name  = "PASSWORD"
+        value = var.server_admin_password
+      }
       ports {
         container_port = 8089
       }
@@ -397,8 +417,11 @@ resource "google_cloud_run_v2_service" "load_tf" {
   }
 }
 
+# Access to load service
 resource "google_cloud_run_v2_service_iam_member" "load_invoker" {
   name   = google_cloud_run_v2_service.load_tf.name
   role   = "roles/run.invoker"
   member = "allUsers"
 }
+
+# endregion
