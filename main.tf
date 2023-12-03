@@ -357,6 +357,11 @@ resource "google_cloud_run_v2_service" "agencies_tf" {
       }
     }
   }
+  lifecycle {
+    ignore_changes = [
+      launch_stage,
+    ]
+  }
 }
 
 resource "google_cloud_run_v2_service_iam_member" "app_invoker" {
