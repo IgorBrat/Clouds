@@ -358,7 +358,7 @@ resource "google_cloud_run_v2_service" "agencies_tf" {
   }
   lifecycle {
     ignore_changes = [
-      launch_stage,
+      google_cloud_run_v2_service.agencies_tf.template.containers[0].image
     ]
   }
 }
