@@ -140,13 +140,6 @@ resource "google_sql_user" "terraform_user" {
 
 # CI/CD
 
-resource "google_artifact_registry_repository" "app_repo" {
-  depends_on = [ google_project_service.artifact_registry ]
-  repository_id = "cloud-run-source-deploy/${var.app_service}"
-  format        = "DOCKER"
-  location      = var.region
-}
-
 # App trigger
 resource "google_cloudbuild_trigger" "app-trigger" {
   name            = "agencies-terraform-trigger"
