@@ -391,8 +391,8 @@ resource "google_cloud_run_v2_service" "load_tf" {
   }
 }
 
-#resource "google_cloud_run_v2_service_iam_member" "load_invoker" {
-#  name   = google_cloud_run_v2_service.load_tf.name
-#  role   = "roles/run.invoker"
-#  member = "allUsers"
-#}
+resource "google_cloud_run_v2_service_iam_member" "load_invoker" {
+  name   = google_cloud_run_v2_service.load_tf.name
+  role   = "roles/run.invoker"
+  member = "allUsers"
+}
