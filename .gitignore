@@ -78,6 +78,12 @@ fabric.properties
 log/
 target/
 
+# Project related
 Agencies/src/main/resources/data/
 Agencies/src/main/resources/startup1.sh
 Agencies/src/main/resources/script.sh
+
+# Terraform
+variables.tf
+creds.json
+.terraform
