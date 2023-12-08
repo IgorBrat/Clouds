@@ -392,7 +392,7 @@ resource "google_cloud_run_v2_service" "load_tf" {
   template {
     scaling {
       min_instance_count = 0
-      max_instance_count = 1
+      max_instance_count = 3
     }
     # First time there is no image of app because trigger never triggered
     containers {
